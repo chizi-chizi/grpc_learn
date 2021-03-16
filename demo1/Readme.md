@@ -6,3 +6,7 @@
 - 步骤3.执行python client.py
 # 输出结果
 输出text.txt文件内容
+# 清理
+```
+make clean
+```
