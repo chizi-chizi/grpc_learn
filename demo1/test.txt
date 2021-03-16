@@ -1,0 +1,137 @@
+mode: infra
+profile: infra
+
+dns:
+  query:
+    enable: 1
+    length_limit: 512
+    rate_limit:
+      bps: 10000000
+      enable: 1
+      pps: 10000
+  response:
+    enable: 1
+    length_limit: 512
+    rate_limit:
+      bps: 10000000
+      enable: 1
+      pps: 10000
+
+icmp:
+  fragment_enable: 1
+  length_limit: 1500
+  no_support_type:
+    drop_enable: 0
+  rate_limit:
+    bps: 4294967295
+    enable: 0
+    pps: 4294967295
+  types: []
+
+ip:
+  dark_ip_enable: 1
+  fragment_enable: 1
+  land_attack_protect: 1
+  protocols: []
+
+ntp:
+  response:
+    enable: 1
+    length_limit: 512
+    rate_limit:
+      bps: 10000000
+      enable: 1
+      pps: 10000
+
+rate_limit:
+  bps: 100000000
+  enable: 1
+  pps: 100000
+
+snmp:
+  response:
+    rate_limit:
+      bps: 10000000
+      enable: 1
+      pps: 10000
+
+ssdp:
+  drop_all:
+    enable: 1
+
+zombie_filter:
+  host:
+    action: ratelimit
+    drop_duration: 60s
+    enable: 0
+    rate_limit:
+      bps: 4294967295
+      pps: 4294967295
+  network:
+    action: ratelimit
+    drop_duration: 60s
+    enable: 0
+    rate_limit:
+      bps: 4294967295
+      pps: 4294967295
+
+tcp:
+  fragment_enable: 1
+  malformed_flags_enable: 1
+  malformed_reserved_flags_enable: 0
+  protect:
+    algo: syn_retransmission
+    enable: 0
+    os_fingerprint: 0
+    session:
+      burstdrain: 20s
+      rate_limit:
+        pps: 4294967295
+      timeout: 300s
+    syn_window_max: 4000
+    syn_window_min: 799
+  rate_limit:
+    bps: 4294967295
+    enable: 0
+    pps: 4294967295
+  strict_mode:
+    enable: 0
+  syn:
+    data_length: 0
+    drop_all_enable: 0
+    mss:
+      enable: 0
+      length: 1200
+    options_length: 60
+
+udp:
+  fragment_enable: 1
+  no_data_payload:
+    enable: 1
+    length: 0
+  rate_limit:
+    bps: 4294967295
+    enable: 0
+    pps: 4294967295
+  zero_data_payload:
+    enable: 0
+    length: 128
+
+
+wb:
+  ntif_enable: 1
+  global:
+  - name: g_1
+    action: 2
+  - name: g_2
+    action: 1
+  - name: g_3
+    action: 2
+  - name: g_4
+    action: 0
+
+rib:
+  enable: 1
+force_load_filter: false
+whitelist: 3529_ip_v4_whitelist
+blacklist: 3529_ip_v4_blacklist

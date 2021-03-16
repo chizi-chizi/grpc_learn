@@ -1,0 +1,19 @@
+syntax = "proto2";
+
+package  test;
+
+// A simple key-value storage service
+service Test{
+  // Provides a value for each key request
+  rpc GetFile(stream Request) returns (stream Response) {}
+}
+
+// The request message containing the key
+message Request {
+  required string file_path= 1;
+}
+
+// The response message containing the value associated with the key
+message Response {
+  required string value = 1;
+}
