@@ -1,6 +1,6 @@
 # 概述
 写c语言封装pb消息的接口， 该接口供c++代码调用的方式一：
-···
+```
       string pbMsg;
       char* buf= NULL;   // 初始化为 null 的指针
       int len;
@@ -12,7 +12,7 @@
 
       person.ParseFromString(pbMsg);
       stream->Write(person);
-···
+```
 # 测试步骤
 - 步骤1.执行make命令
 - 步骤2.执行 ./server
