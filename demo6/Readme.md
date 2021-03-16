@@ -1,14 +1,13 @@
 # 概述
-写c语言封装pb消息的接口， 该接口供c++代码调用的方式一：
+写c语言封装pb消息的接口， 该接口供c++代码调用的方式二：
 ···
-      string pbMsg;
       char* buf= NULL;   // 初始化为 null 的指针
       int len;
       buf = new char[128];
 
       getPbMsg(buf, &len);
       std::cout<<"len"<<len<<std::endl;
-      pbMsg.assign(buf, 0, len);//使用string类的assign方法
+      string pbMsg(buf, buf+len);
 
       person.ParseFromString(pbMsg);
       stream->Write(person);
