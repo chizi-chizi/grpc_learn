@@ -18,7 +18,7 @@
 - 步骤2.执行 ./server
 - 步骤3.执行python client.py
 # 输出结果
-当执行python client.py， 服务端将打印段错误信息，如下：
+当执行python client.py， 结果如下：
 ```
 root@nxddos:~/demo5# python client.py
 client receive :
