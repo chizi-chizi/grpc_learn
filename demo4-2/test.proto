@@ -1,0 +1,22 @@
+
+syntax = "proto3";
+
+package  test;
+
+// A simple key-value storage service
+service Test{
+  // Provides a value for each key request
+  rpc GetPerson(stream Request) returns (stream Person) {}
+}
+
+// The request message containing the key
+message Request {
+    string name = 1;
+}
+
+// The response message containing the value associated with the key
+message Person{
+  string name = 1;
+  int32  age  = 2;
+  int32  weight = 3;
+}
