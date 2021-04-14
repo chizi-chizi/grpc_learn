@@ -57,3 +57,49 @@ status: SERVING
 **************************************************
 status: SERVING
 ```
+# health check proto学习
+## 客户端
+1. 客户端在获取服务端的健康状态的时候，必须设置超时时间， 如果在超时时间内， 健康监测还未完成， 客户端应该声明服务端是unhealth的
+2. 客户端需能处理服务端没有运行health service的情况。 
+## 服务端
+1. 服务端应该使用一个空的字符串作为健康状态的服务名，为了兼容客户端对服务名不感兴趣，此时也能进行健康监测。
+2. 服务端应该手头设置所以的可能服务。如果服务名被找到， 应该返回OK， 但里面的字段可以是SERVING NOT SERVING , 如果服务名没有被找到， 应该返回NOT_FOUND
+
+下面的源码中， 可以看到， 在c++的 default health check实现中， 使用了空字符串作为服务名：
+```c++
+//cpp/server/health/default_health_check_service.cc
+DefaultHealthCheckService::DefaultHealthCheckService() {
+  services_map_[""].SetServingStatus(SERVING);
+}
+
+```
+下面的源码中， 可以看出监控检测时， 对返回值的处理
+```
+//grpc/src/cpp/server/health/default_health_check_service.cc
+
+bool DefaultHealthCheckService::HealthCheckServiceImpl::EncodeResponse(
+    ServingStatus status, ByteBuffer* response) {
+  upb::Arena arena;
+  grpc_health_v1_HealthCheckResponse* response_struct =
+      grpc_health_v1_HealthCheckResponse_new(arena.ptr());
+  grpc_health_v1_HealthCheckResponse_set_status(
+      response_struct,
+      status == NOT_FOUND
+          ? grpc_health_v1_HealthCheckResponse_SERVICE_UNKNOWN
+          : status == SERVING ? grpc_health_v1_HealthCheckResponse_SERVING
+                              : grpc_health_v1_HealthCheckResponse_NOT_SERVING);
+  size_t buf_length;
+  char* buf = grpc_health_v1_HealthCheckResponse_serialize(
+      response_struct, arena.ptr(), &buf_length);
+  if (buf == nullptr) {
+    return false;
+  }
+  grpc_slice response_slice = grpc_slice_from_copied_buffer(buf, buf_length);
+  Slice encoded_response(response_slice, Slice::STEAL_REF);
+  ByteBuffer response_buffer(&encoded_response, 1);
+  response->Swap(&response_buffer);
+  return true;
+}
+
+```
+
