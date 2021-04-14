@@ -1,6 +1,6 @@
 # 参考
-[how to use health check](https://github.com/grpc/grpc/issues/13962)
-[GRPC Health Checking Protocol](https://github.com/grpc/grpc/blob/master/doc/health-checking.md)
+- [how to use health check](https://github.com/grpc/grpc/issues/13962)
+- [GRPC Health Checking Protocol](https://github.com/grpc/grpc/blob/master/doc/health-checking.md)
 # 概述
 学习注册service_name的方法,使用如下函数：
 ```c++
