@@ -33,7 +33,7 @@ void DefaultHealthCheckService::SetServingStatus(
  HealthCheckServiceInterface* GetHealthCheckService() 
 ```
 # 修改代码
-```
+```c++
 using grpc::HealthCheckServiceInterface;
 
 HealthCheckServiceInterface* health_server = server->GetHealthCheckService();
@@ -46,7 +46,7 @@ health_server->SetServingStatus(test_name, true);
 - 第二步：运行server: ./greeter_server
 - 第三步：运行grpc_health_check.py
 结果为：
-```
+```txt
 \root@nxddos:~/demo13# python grpc_health_check.py
 **************************************************
 status: SERVING
@@ -74,7 +74,7 @@ DefaultHealthCheckService::DefaultHealthCheckService() {
 
 ```
 下面的源码中， 可以看出监控检测时， 对返回值的处理
-```
+```c++
 //grpc/src/cpp/server/health/default_health_check_service.cc
 
 bool DefaultHealthCheckService::HealthCheckServiceImpl::EncodeResponse(
