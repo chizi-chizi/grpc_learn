@@ -1,3 +1,6 @@
+# 参考
+[how to use health check](https://github.com/grpc/grpc/issues/13962)
+[GRPC Health Checking Protocol](https://github.com/grpc/grpc/blob/master/doc/health-checking.md)
 # 概述
 学习注册service_name的方法,使用如下函数：
 ```c++
@@ -28,4 +31,29 @@ void DefaultHealthCheckService::SetServingStatus(
 
 //grpc/include/grpcpp/server.h  或者server的healtch check server
  HealthCheckServiceInterface* GetHealthCheckService() 
+```
+# 修改代码
+```
+using grpc::HealthCheckServiceInterface;
+
+HealthCheckServiceInterface* health_server = server->GetHealthCheckService();
+//可以设置多次
+health_server->SetServingStatus(service_name, true);
+health_server->SetServingStatus(test_name, true);
+```
+# 测试
+- 第一步：编译：make
+- 第二步：运行server: ./greeter_server
+- 第三步：运行grpc_health_check.py
+结果为：
+```
+\root@nxddos:~/demo13# python grpc_health_check.py
+**************************************************
+status: SERVING
+
+**************************************************
+status: SERVING
+
+**************************************************
+status: SERVING
 ```

@@ -7,13 +7,8 @@ from   health_check_pb2 import HealthCheckRequest
 from health_check_pb2_grpc import HealthStub
 import grpc
 
-SERVICE_NAME = "grpc.health.v1.Health"
-SERVICE_NAME = "Health"
-SERVICE_NAME = "grpc.health.v1.HealthCheck"
-#SERVICE_NAME = ""
-#SERVICE_NAME = "SayHello"
-SERVICE_NAME = ["l3_grpc_server_health_check",
-                "dog", ""]
+SERVICE_NAME = ["l3_grpc_service_health",
+                "test", ""]
 
 
 def run():

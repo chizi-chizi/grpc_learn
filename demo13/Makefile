@@ -38,7 +38,7 @@ PROTOS_PATH = ./
 
 vpath %.proto $(PROTOS_PATH)
 
-all: system-check python-compile greeter_server greeter_async_server  
+all: system-check python-compile greeter_server 
 
 python-compile:
 	protoc -I=./ --python_out=./ ./health_check.proto
@@ -49,8 +49,6 @@ greeter_server: helloworld.pb.o helloworld.grpc.pb.o greeter_server.o
 
 
 
-greeter_async_server: helloworld.pb.o helloworld.grpc.pb.o greeter_async_server.o
-	$(CXX) $^ $(LDFLAGS) -o $@
 
 .PRECIOUS: %.grpc.pb.cc
 %.grpc.pb.cc: %.proto
@@ -61,7 +59,7 @@ greeter_async_server: helloworld.pb.o helloworld.grpc.pb.o greeter_async_server.
 	$(PROTOC) -I $(PROTOS_PATH) --cpp_out=. $<
 
 clean:
-	rm -f *.o *.pb.cc *.pb.h greeter_server greeter_async_server  *pb2*
+	rm -f *.o *.pb.cc *.pb.h greeter_server *pb2*
 
 
 # The following is to test your system and ensure a smoother experience.
