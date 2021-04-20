@@ -15,3 +15,4 @@
 - demo11: 探究同步服务器设置min_poll max_poll 线程池数量等的方法
 - demo12: 学习health check
 - demo13: 学习注册service_name的方法, 以及健康检查协议分析。
+- demo14: 测试客户端与服务端断开重连的方法。
