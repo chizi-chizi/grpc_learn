@@ -104,7 +104,7 @@ process count:5, total_time:10s
 // max-threads set) to the server builder.
 #define DEFAULT_MAX_SYNC_SERVER_THREADS INT_MAX
 ```
-![default_max_sync_server_threads.png.png](./pic/default_max_sync_server_threads.png.png)
+![default_max_sync_server_threads.png](./pic/default_max_sync_server_threads.png.png)
 
 问题：如果请求比较多，且请求的处理事件较长，线程回收过慢， 将会创建大量的线程。
 
