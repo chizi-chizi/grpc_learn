@@ -243,9 +243,12 @@ Greeter received: Hello world
 
 ## 3.3 异步服务端，如何使用动态线程池
 
-# 4. 附录
+# 4. 总结
+- 同步服务端的问题：  默认下，线程数目不可控， 且如果设置线程数的最大个数，将出现访问失败的情况， 如果不设置最大线程数， 当进行高并发请求的时候，将出现线程回收慢，导致创建大量线程的情况，即线程数量不可控。
+- 异步服务端的情况：默认下， 为单线程模式， 当存在多个情况的时候， 会出现排队问题。 尤其针对于引擎现在的模型， 多个控制平面的进程共用一个核， 这就会有些请求不能及时响应。
+# 5. 附录
 
-## 4.1 程序使用方法说明
+## 5.1 程序使用方法说明
 ```
 Usage:./greeter_server -i <min_poll_num> -a <max_poll_num> -t <thread_pool_max_num> -s <sleep_time>(1-1000)ms
 ```
@@ -253,7 +256,7 @@ Usage:./greeter_server -i <min_poll_num> -a <max_poll_num> -t <thread_pool_max_n
 - -a指最大的poll线程个数
 - -t指设置最大线程数
 - -s指每线程空转cpu的时间，在这里并不是调用的sleep函数
-## 4.2 源码分析
+## 5.2 源码分析
 如果我们使用grpc c++的同步API来实现一个server,就如官方的grpc/examples/cpp/helloworld/greeter_server.cc例子所示。
 
 那么如果同时来到多个rpc请求的话，线程模型是如何的呢？
@@ -264,7 +267,7 @@ Usage:./greeter_server -i <min_poll_num> -a <max_poll_num> -t <thread_pool_max_n
 
 grpc会使用线程池来处理所有文件描述fds上的事件，线程池中的线程分为2种，一种是专门用来处理epoll事件的，另一种是用来执行rpc请求的。
 
-### 线程池算法
+### 5.2.1 线程池算法
 - 处理epoll事件的线程的数量最小个数min_pollers_默认是1.
 - 处理epoll事件的线程的数量最大个数max_pollers_默认是2.
 - 最小最大epoll线程个数可以设置
