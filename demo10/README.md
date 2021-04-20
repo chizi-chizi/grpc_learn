@@ -104,7 +104,7 @@ process count:5, total_time:10s
 // max-threads set) to the server builder.
 #define DEFAULT_MAX_SYNC_SERVER_THREADS INT_MAX
 ```
-![image.png](https://cdn.nlark.com/yuque/0/2021/png/2182691/1618813780076-263ee210-f31d-4c2f-bc89-0633d0bf8b10.png?x-oss-process=image%2Fresize%2Cw_1800)
+![default_max_sync_server_threads.png.png](./pic/default_max_sync_server_threads.png.png)
 
 问题：如果请求比较多，且请求的处理事件较长，线程回收过慢， 将会创建大量的线程。
 
@@ -235,8 +235,8 @@ Greeter received: Hello world
 ```
 
 
-![image.png](https://cdn.nlark.com/yuque/0/2021/png/2182691/1615807744967-ee04cd80-5541-4501-bef1-77db32ecb95c.png?x-oss-process=image%2Fresize%2Cw_1800)
 
+![how_to_set_poll_num.png](./pic/how_to_set_poll_num.png)
 ## 3.2 多个请求的时候，将出现排队问题
 
 查看1.1的测试。
@@ -253,3 +253,21 @@ Usage:./greeter_server -i <min_poll_num> -a <max_poll_num> -t <thread_pool_max_n
 - -a指最大的poll线程个数
 - -t指设置最大线程数
 - -s指每线程空转cpu的时间，在这里并不是调用的sleep函数
+## 4.2 源码分析
+如果我们使用grpc c++的同步API来实现一个server,就如官方的grpc/examples/cpp/helloworld/greeter_server.cc例子所示。
+
+那么如果同时来到多个rpc请求的话，线程模型是如何的呢？
+
+通过阅读代码，可知线程模型会如下图所示：
+
+![sync_model.png](./pic/sync_model.png)
+
+grpc会使用线程池来处理所有文件描述fds上的事件，线程池中的线程分为2种，一种是专门用来处理epoll事件的，另一种是用来执行rpc请求的。
+
+### 线程池算法
+- 处理epoll事件的线程的数量最小个数min_pollers_默认是1.
+- 处理epoll事件的线程的数量最大个数max_pollers_默认是2.
+- 最小最大epoll线程个数可以设置
+- 初始状态只有1个默认线程处理epoll,当有并发rpc请求到来时，每一个rpc请求都会创建一个线程来处理rpc请求.保证至少有min_pollers个线程处理epoll.
+- 当rpc处理完成时，会有部分线程转换为epoll线程（不超过最大个数max_pollers，其它线程退出）
+- 当超过最小epoll线程个数min_pollers的线程epoll超时(默认10s)还没有新请求处理时,也会退出。
